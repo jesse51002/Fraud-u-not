@@ -9,7 +9,6 @@ import {
   Dimensions,
   Pressable,
   Alert,
-  Button,
   TextInput,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -17,10 +16,6 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Divider } from 'react-native-paper';
-
-// You can import from local files
-import CreateAccount from './screens/CreateAccount';
 
 import colors from './config/colors';
 
@@ -31,6 +26,21 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 {/* BIG GOAL: REFACTORRR EVERYTHINGGG */}
+
+{/* Current Capabilities
+    - Login or create account through home screen
+    - Go between login and create account screens
+    - (needs to be removed later) access menu from login and create account and, when leaving menu, go to the last page
+    - logout button in menu brings you back to home screen
+    - submit buttons on login and create account brings you to menu
+      - exiting the menu then would bring you to the placeholder purchase history screen
+ */}
+ {/* NOT FUNCTIONAL
+    - The other buttons on the menu screen - all of those pages have not been made yet
+    - Purchase history screen is incomplete
+      - purchase history button on menu is not functional
+ */}
+
 
 {/* Home Screen:
     The first screen the user sees when opening the app
@@ -326,7 +336,7 @@ function CreateAccScreen({ navigation }) {
         <View style={{ justifyContent: 'flex-end' }}>
           <Pressable
             style={styles.button_dark}
-            onPress={() => navigation.navigate('Purchase History', 'Menu')}>
+            onPress={() => navigation.navigate('Menu', 'Purchase History')}>
             <Text
               style={{
                 fontFamily: 'Barlow_Regular',
@@ -444,6 +454,72 @@ function MenuScreen({ route, navigation }) {
   );
 }
 
+{/* Purchase History Screen:
+    Incomplete placeholder page
+ */}
+function PurchaseHisScreen({ navigation }) {
+  const [fontsLoaded] = useFonts({
+    Barlow_Regular: require('./assets/barlow/Barlow-Regular.otf'),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <View
+        style={{
+          backgroundColor: colors.dark,
+          flex: 0.3,
+          padding: 3,
+          justifyContent: 'center',
+        }}>
+        <Ionicons
+          name="menu-outline"
+          size={50}
+          color="#ADB6C4"
+          onPress={() => navigation.navigate('Menu', 'Purchase History')}
+        />
+      </View>
+      <View
+        style={{
+          backgroundColor: colors.highlight_light,
+          flex: 3,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text style={styles.title}>Purchase History</Text>
+        <View style={styles.whiteAbsolute}>
+          <Text
+            style={{
+              fontFamily: 'Barlow_Regular',
+              fontSize: 20,
+              paddingVertical: 10,
+            }}>
+            Placeholder!!!
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'Barlow_Regular',
+              fontSize: 20,
+              paddingVertical: 10,
+            }}>
+            Cards will be added soon!!
+          </Text>
+        </View>
+      </View>
+      <View style={{ backgroundColor: colors.dark, flex: 0.25 }} />
+    </SafeAreaView>
+  );
+}
+
 const Stack = createNativeStackNavigator();
 
 {/* App:
@@ -473,6 +549,11 @@ export default function App() {
           options={{ headerShown: false }}
           component={MenuScreen}
         />
+        <Stack.Screen
+          name="Purchase History"
+          options={{ headerShown: false }}
+          component={PurchaseHisScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -496,7 +577,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'center',
     padding: 20,
-    fontSize: 40,
+    fontSize: 38,
   },
   button_light: {
     alignItems: 'center',
@@ -533,6 +614,18 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: 'white',
     justifyContent: 'space-between',
+    alignContent: 'center',
+    alignItems: 'center',
+  },
+  whiteAbsolute: {
+    width: windowWidth - 50,
+    height: windowHeight - 225,
+    borderWidth: 1,
+    borderColor: 'black',
+    marginBottom: 15,
+    borderRadius: 15,
+    paddingVertical: 10,
+    backgroundColor: 'white',
     alignContent: 'center',
     alignItems: 'center',
   },
