@@ -48,7 +48,7 @@ Distance from Last Purcahse
 
 Price Ratio From Median
 * When amount gets more than 7.5x the mdeian purchase the fraud percentage raised from <b>2% to 60%</b>
-![Distance from Home Graph](gitImages/homeDistanceGraph.png?raw=true "Title")
+![Distance from Home Graph](gitImages/ratioToMedian.png?raw=true "Title")
 
 
 ~ The <b>mlmmodel</b> branch contains the ML Model that we are using to flag suspicious purchases <br />
