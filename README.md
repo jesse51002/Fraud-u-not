@@ -19,7 +19,7 @@ That being said, the progress of the front-end will be kept updated at this link
 * online_order - Whether it was an online order
 * fraud - Whether or not the purcahse was a fraud
 
-#### Data Exploration
+### Data Exploration
 
 <ins>Binary Values effect on whether or not a purchase was a fraud</ins>
 
@@ -63,7 +63,7 @@ We attemplted to use 3 resampling methods
   For the final model <ins>Undersmapling</ins> gave us the highest presicion score and the least false positives.
   
   
-#### Machine Learning Model
+### Machine Learning Model
   
 We tried 4 different machine learning models
   * XGBBoost
@@ -76,6 +76,7 @@ We tried 4 different machine learning models
 Accuracy Score: 0.9999222222222223
 
 Precision Score: 1
+
 ![Price Ratio From Median Graph](gitImages/ranForesteatmap.png?raw=true "Title")
 
   
