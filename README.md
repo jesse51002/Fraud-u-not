@@ -44,13 +44,44 @@ Distance from Home
 
 Distance from Last Purcahse
 * When the distance got above 70 milies the fraud percentage raised from <b>8% to 48%</b>
-![Distance from Home Graph](gitImages/distanceLastTran.png?raw=true "Title")
+![Distance from Last Purcahse Graph](gitImages/distanceLastTran.png?raw=true "Title")
 
 Price Ratio From Median
 * When amount gets more than 7.5x the mdeian purchase the fraud percentage raised from <b>2% to 60%</b>
-![Distance from Home Graph](gitImages/ratioFromMedian.png?raw=true "Title")
+![Price Ratio From Median Graph](gitImages/ratioFromMedian.png?raw=true "Title")
 
+  
+<b>Data Imbalance</b>
+  
+The Data included 92.3% Non - fraud rows and 8.74% Fraud rows. This amaount of data imbalance called for resampling of the training dataset. 
+  
+We attemplted to use 3 resampling methods
+  * Over Sampling
+  * Undersampling
+  * SMOTE
+For the final model <ins>Undersmapling</ins> gave us the highest presicion score and the least false positives.
+  
+  
+<b>Machine Learning Model</b>
+  
+We tried 4 different machine learning models
+  * XGBBoost
+  * Logistic Regression
+  * Random Forest
+  * K Nearest Neighbors
 
+<ins> Random Forest </ins> gave us the highest accuracy with 
+  
+Accuracy Score: 0.9999222222222223
+
+Precision Score: 1
+![Price Ratio From Median Graph](gitImages/ranForesteatmap.png?raw=true "Title")
+
+  
+  
+  
+  
+  
 ~ The <b>mlmmodel</b> branch contains the ML Model that we are using to flag suspicious purchases <br />
 ~ The <b>front-end</b> branch contains the React Native scripts used to build the UI <br />
 ~ The <b>database</b> branch contains the database code for storing account and bank information, as well as user authentication <br /><br />
