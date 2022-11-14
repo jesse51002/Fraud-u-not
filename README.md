@@ -21,7 +21,7 @@ That being said, the progress of the front-end will be kept updated at this link
 
 #### Data Exploration
 
-<u>Binary Values effect on whether or not a purchase was a fraud<u/>
+<ins>Binary Values effect on whether or not a purchase was a fraud</ins>
 
 Repeat Retailer
 * Whether a purchase was a repeat retailer did not effect the fraud percentage. It stayed consistent at around <b>8.84%</b> of purchases whether
@@ -36,9 +36,19 @@ Online Order
 * When an order was made online it increased the pertange chance of the purchase being a fraud from 1.34% to 12.71% which is an increase by <b>846.9%</b>.
 
 
-<u>Continous Values effect on whether or not a purchase was a fraud</u>
+<ins>Continous Values effect on whether or not a purchase was a fraud</ins>
 
+Distance from Home
+* When the distance got above 125 milies the fraud percentage raised from <b>6% to 43%</b>
+![Distance from Home Graph](gitImages/homeDistanceGraph.png?raw=true "Title")
 
+Distance from Last Purcahse
+* When the distance got above 70 milies the fraud percentage raised from <b>8% to 48%</b>
+![Distance from Home Graph](gitImages/distanceLastTran.png?raw=true "Title")
+
+Price Ratio From Median
+* When amount gets more than 7.5x the mdeian purchase the fraud percentage raised from <b>2% to 60%</b>
+![Distance from Home Graph](gitImages/homeDistanceGraph.png?raw=true "Title")
 
 
 ~ The <b>mlmmodel</b> branch contains the ML Model that we are using to flag suspicious purchases <br />
