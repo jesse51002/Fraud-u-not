@@ -7,7 +7,7 @@ That being said, the progress of the front-end will be kept updated at this link
 
 ## Machine Learning Model Training
 
-<u>Dataset: https://www.kaggle.com/datasets/dhanushnarayananr/credit-card-fraud</u> 
+<u>Dataset: https://www.kaggle.com/datasets/dhanushnarayananr/credit-card-fraud<u/> 
 
 <b>Dataset Colums</b>
 * distance_from_home - Distance From Home
@@ -21,7 +21,7 @@ That being said, the progress of the front-end will be kept updated at this link
 
 #### Data Exploration
 
-<u>Binary Values effect on whether or not a purchase was a fraud</u>
+<u>Binary Values effect on whether or not a purchase was a fraud<u/>
 
 Repeat Retailer
 * Whether a purchase was a repeat retailer did not effect the fraud percentage. It stayed consistent at around <b>8.84%</b> of purchases whether
@@ -37,6 +37,7 @@ Online Order
 
 
 <u>Continous Values effect on whether or not a purchase was a fraud</u>
+
 
 
 
