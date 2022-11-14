@@ -59,10 +59,11 @@ We attemplted to use 3 resampling methods
   * Over Sampling
   * Undersampling
   * SMOTE
-For the final model <ins>Undersmapling</ins> gave us the highest presicion score and the least false positives.
+
+  For the final model <ins>Undersmapling</ins> gave us the highest presicion score and the least false positives.
   
   
-<b>Machine Learning Model</b>
+#### Machine Learning Model
   
 We tried 4 different machine learning models
   * XGBBoost
