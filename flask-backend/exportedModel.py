@@ -45,7 +45,7 @@ class modelPrediction:
                 newData.append(encodedVal)
             # Adds the data to the panda dataframe
             self.dataFrame[newName] = newData
-
+    
         valRanges = {
             'distance_from_home': [4, 10, 25, 50, 75, 100, 125, 150,250,1000, 5000],
             'distance_from_last_transaction': [0.3, 1, 3, 10, 40, 60, 70, 80, 100, 250, 500, 1000, 5000],
