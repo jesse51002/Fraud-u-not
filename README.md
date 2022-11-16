@@ -24,7 +24,7 @@ That being said, the progress of the front-end will be kept updated at this link
 <ins>Binary Values effect on whether or not a purchase was a fraud</ins>
 
 Repeat Retailer
-* Whether a purchase was a repeat retailer did not effect the fraud percentage. It stayed consistent at around <b>8.84%</b> of purchases whether
+* Whether a purchase was a repeat retailer did not effect the fraud percentage. It stayed consistent at around <b>8.84%</b> of purchases being fraudulant
 
 Used Chip
 * When a chip was not used it increased the pertange chance of the purchase being a fraud from 6.40% to 10.00% which is an increase by <b>56.44%</b>.
