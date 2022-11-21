@@ -1,2 +1,2 @@
-# Check out fraud-frontend-draft
+# Please check out fraud-frontend
 for front-end code
