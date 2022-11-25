@@ -13,8 +13,8 @@ app = Flask(__name__)
 def fraudPred():
     # Gets the request data
     reqData = request.get_json()
-
-
+    print(reqData)
+    
     # Instantiates the model prediction class
     predClass = modelPrediction(
         distanceFromHome= reqData['DistanceFromHome'], 
