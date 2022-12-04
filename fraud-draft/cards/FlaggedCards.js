@@ -87,7 +87,6 @@ export default function FlaggedCards({ screenName }) {
         width="95%"
         extraData={initialState}
         keyExtractor={(index) => index.toString()}
-        ItemSeparatorComponent={this.FlatListItemSeparator}
         //item is the name of the object so item.xxxx accesses the info in it
         renderItem={({ item }) => (
           /* This TouchableHighlight wraps around the card so that when it is pressed, the details of that card is sent to the Review Purchase Screen */
@@ -100,7 +99,8 @@ export default function FlaggedCards({ screenName }) {
                   amount: item.amount,
                   purchase_date: item.purchase_date,
                   location: item.location,
-                  flag_reason: item.flag_reason
+                  flag_reason: item.flag_reason,
+                  prevScreen: 'Flagged Purchases',
                 })
             }
             underlayColor="colors.light">
@@ -140,17 +140,6 @@ export default function FlaggedCards({ screenName }) {
     </SafeAreaView>
   );
 }
-
-FlatListItemSeparator = () => {
-  return (
-    <View
-      style={{
-        height: 1,
-        width: '100%',
-      }}
-    />
-  );
-};
 
 const styles = StyleSheet.create({
   cardtext: {

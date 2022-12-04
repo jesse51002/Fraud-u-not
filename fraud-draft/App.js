@@ -10,28 +10,39 @@ import {
   TextInput,
   ScrollView,
   Linking,
+  StyleSheet,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import Modal from 'react-native-modal';
 import { useFonts } from 'expo-font';
 import { Card } from 'react-native-paper';
 import * as SplashScreen from 'expo-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-// import the cards that are shown in the Purchase History, Flagged History, and Bank Details screens (respectively)
+// // import the cards that are shown in the Purchase History, Flagged History, and Bank Details screens (respectively)
 import Transactions from './cards/TransactionCards';
 import Flagged from './cards/FlaggedCards';
-import Banks from './cards/BankCards';
 
-// import these screens - please go to screens folder for more details on each
+// // import these screens - please go to screens folder for more details on each
+import BankDetailsScreen from './screens/BankDetails';
 import AccountDetailsScreen from './screens/AccountDetails';
 import ContactUsScreen from './screens/ContactUs';
 import AboutAppScreen from './screens/AboutApp';
 import ResourcesScreen from './screens/Resources';
 
-// import style sheet and color palette
-const styles = require('./config/style');
 import colors from './config/colors';
+// import style sheet and color palette
+const styles = require('./config/style').default;
+/*
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text>wosssssssssssssssssssssssssssssssssssssw</Text>
+    </View>
+  );
+}
+*/
 
 // used to allow fonts to load
 SplashScreen.preventAutoHideAsync();
@@ -67,10 +78,10 @@ const windowWidth = Dimensions.get('window').width;
 {
   /* WILL WORK ON BETWEEN NOW AND DEMO
     - Make it possible for user to update account information 
-      - Dropdown menu for user to choose authentication and notification method
     - Adding a bank with user input (will not actually establish a link)
     - Reviewing any purchase (not just flagged ones) to flag purchases missed by the algorithm
     - Improve email format of file a claim
+    - Have an amount so that any purchase above that amount is flagged
     - (Separately) Connecting the front-end and the machine learning model
  */
 }
@@ -170,9 +181,91 @@ function LoginScreen({ navigation }) {
   // would send these to database for authentication when sign in button is clicked
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  // for the pop-up window
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  ///// JESSE THIS PART IS RELEVANT TO YOU /////
+  {
+    /* FETCHING FROM ML MODEL
+    get the flagged value from the machine learning model by sending user input data and handling the response
+  */
+  }
+  const getLoginSuccess = async () => {
+    try {
+      // ~~~ you just need to edit this part based on how your server works ~~~ //
+      const response = await fetch('http://127.0.0.1:5000/fraudPred', {
+        method: 'POST',
+        // main thing you probably have to modify
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          Username: username,
+          Password: password,
+        }),
+      });
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+      const json = await response.json();
+      // if value is 0, then purchase not been flagged
+      console.log(json.LoginSuccess);
+      if (json.LoginSuccess == 0) return false;
+      return true;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  {
+    /* HANDLE CLICK FUNCTION
+    to figure out whether authentication is successful (by calling getLoginSuccess())
+    if the function returned true, then move on to the menu page
+    otherwise, 
+   */
+  }
+  const handleClick = () => {
+    if (getLoginSuccess()) {
+      navigation.navigate('Menu', 'Purchase History');
+    } else {
+      setModalVisible(!isModalVisible);
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <Modal isVisible={isModalVisible}>
+        <View style={styles.modalView}>
+          <View
+            style={{
+              alignContent: 'center',
+              flex: 1,
+            }}>
+            <Text
+              style={{
+                fontFamily: 'Barlow_Regular',
+                fontSize: 17,
+                padding: 20,
+                textAlign: 'center',
+              }}>
+              Authentication Failed!{'\n'}Please double-check your username
+              and/or password
+            </Text>
+          </View>
+          <Pressable
+            style={styles.button_dark}
+            onPress={() => setModalVisible(!isModalVisible)}>
+            <Text
+              style={{
+                color: 'white',
+                fontFamily: 'Barlow_Medium',
+                fontSize: 20,
+              }}>
+              Close
+            </Text>
+          </Pressable>
+        </View>
+      </Modal>
       <View
         style={{
           backgroundColor: colors.dark,
@@ -225,7 +318,9 @@ function LoginScreen({ navigation }) {
         <View style={{ justifyContent: 'flex-end' }}>
           <Pressable
             style={styles.button_dark}
-            onPress={() => navigation.navigate('Menu', 'Purchase History')}>
+            onPress={() => {
+              handleClick();
+            }}>
             <Text
               style={{
                 fontFamily: 'Barlow_Regular',
@@ -564,8 +659,9 @@ function PurchaseHisScreen({ navigation }) {
         <Text style={styles.title}>Purchase History</Text>
         <ScrollView style={styles.whiteAbsolute}>
           {/* The transactions element holds the true content of this screen - please go to the cards folder and review TransactionCards.js for more details */}
-          <Transactions></Transactions>
+          <Transactions screenName="Review Purchase"></Transactions>
         </ScrollView>
+        
         <Pressable
           style={styles.button_dark}
           onPress={() => navigation.navigate('Flagged Purchases')}>
@@ -658,8 +754,14 @@ function FlaggedScreen({ navigation }) {
 }
 function ReviewPurchaseScreen({ route, navigation }) {
   /* Get the parameters */
-  const { organization, amount, purchase_date, location, flag_reason } =
-    route.params;
+  const {
+    organization,
+    amount,
+    purchase_date,
+    location,
+    flag_reason,
+    prevScreen,
+  } = route.params;
   //{organization}
   /* hooray https://source--react-navigation-docs.netlify.app/docs/2.x/params/  */
   return (
@@ -732,6 +834,11 @@ function ReviewPurchaseScreen({ route, navigation }) {
               justifyText: 'center',
               alignItems: 'center',
             }}>
+            {flag_reason == 0 && (
+              <Text style={styles.cardtext}>
+                &emsp; This purchase has not been flagged by our algorithm.
+              </Text>
+            )}
             {flag_reason == 1 && (
               <Text style={styles.cardtext}>
                 According to our machine learning algorithm, this purchase has
@@ -772,6 +879,7 @@ function ReviewPurchaseScreen({ route, navigation }) {
                   purchase_date,
                   location,
                   flag_reason,
+                  prevScreen,
                 })
               }>
               <Text
@@ -826,7 +934,7 @@ function ReviewPurchaseScreen({ route, navigation }) {
         </ScrollView>
         <Pressable
           style={styles.button_dark}
-          onPress={() => navigation.navigate('Flagged Purchases')}>
+          onPress={() => navigation.navigate(prevScreen)}>
           <Text
             style={{
               fontFamily: 'Barlow_Regular',
@@ -850,8 +958,14 @@ function ReviewPurchaseScreen({ route, navigation }) {
 }
 function GenerateReportScreen({ route, navigation }) {
   /* Get the parameters */
-  const { organization, amount, purchase_date, location, flag_reason } =
-    route.params;
+  const {
+    organization,
+    amount,
+    purchase_date,
+    location,
+    flag_reason,
+    prevScreen,
+  } = route.params;
   //{organization}
   /* hooray https://source--react-navigation-docs.netlify.app/docs/2.x/params/  */
   return (
@@ -889,11 +1003,11 @@ function GenerateReportScreen({ route, navigation }) {
               alignItems: 'center',
             }}>
             <Text style={styles.cardtext}>
-              &emsp; On {purchase_date}, a fraudulent purchase of amount
-              {amount} dollars was made to the {organization} at {location}. The
-              Fraud-U-Not Machine Learning algorthim has flagged this purchase
-              and it has been confirmed to be fraudulent by the credit card
-              holder.
+              &emsp; On {purchase_date}, a fraudulent purchase of amount{' '}
+              {amount} dollars was made to the {organization} at {location}.{' '}
+              {flag_reason
+                ? ' The Fraud-U-Not Machine Learning algorthim has flagged this purchase and it has been confirmed to be fraudulent by the cardholder.'
+                : ' This purchase has been confirmed to be fraudulent by the cardholder.'}
             </Text>
             {flag_reason == 1 && (
               <Text style={styles.cardtext}>
@@ -931,7 +1045,7 @@ function GenerateReportScreen({ route, navigation }) {
           }}>
           <Pressable
             style={styles.button_dark}
-            onPress={() => navigation.navigate('Flagged Purchases')}>
+            onPress={() => navigation.navigate(prevScreen)}>
             <Text
               style={{
                 fontFamily: 'Barlow_Regular',
@@ -951,6 +1065,7 @@ function GenerateReportScreen({ route, navigation }) {
                 purchase_date,
                 location,
                 flag_reason,
+                prevScreen,
               })
             }>
             <Text
@@ -981,8 +1096,14 @@ function GenerateReportScreen({ route, navigation }) {
 }
 function FileClaimScreen({ route, navigation }) {
   /* Get the parameters */
-  const { organization, amount, purchase_date, location, flag_reason } =
-    route.params;
+  const {
+    organization,
+    amount,
+    purchase_date,
+    location,
+    flag_reason,
+    prevScreen,
+  } = route.params;
   // since {organization} is in the form { organization: "na" }, to just get the "na" we treat it like a JSON
   console.log({ organization }.organization);
   // when filing a claim from the menu instead of from the report, the text fields are blank for input
@@ -990,6 +1111,7 @@ function FileClaimScreen({ route, navigation }) {
   let autofill = { organization }.organization != 'na';
 
   const [text, setText] = useState('');
+
   //{organization}
   /* hooray https://source--react-navigation-docs.netlify.app/docs/2.x/params/  */
   return (
@@ -1022,11 +1144,11 @@ function FileClaimScreen({ route, navigation }) {
             <Text style={styles.header}>Purchase Details</Text>
             <ScrollView style={styles.whiteContainer}>
               <Text style={styles.cardtext}>
-                On {purchase_date}, a fraudulent purchase of amount
-                {amount} dollars was made to the {organization} at {location}.
-                The Fraud-U-Not Machine Learning algorthim has flagged this
-                purchase and it has been confirmed to be fraudulent by the
-                credit card holder.
+                On {purchase_date}, a fraudulent purchase of amount {amount}{' '}
+                dollars was made to the {organization} at {location}.
+                {flag_reason
+                  ? ' The Fraud-U-Not Machine Learning algorthim has flagged this purchase and it has been confirmed to be fraudulent by the cardholder.'
+                  : ' This purchase has been confirmed to be fraudulent by the cardholder.'}
               </Text>
             </ScrollView>
             <Text style={styles.header}>Fraud Details</Text>
@@ -1080,7 +1202,7 @@ function FileClaimScreen({ route, navigation }) {
           {autofill && (
             <Pressable
               style={styles.button_dark}
-              onPress={() => navigation.navigate('Flagged Purchases')}>
+              onPress={() => navigation.navigate(prevScreen)}>
               <Text
                 style={{
                   fontFamily: 'Barlow_Regular',
@@ -1095,7 +1217,11 @@ function FileClaimScreen({ route, navigation }) {
           <Pressable
             style={styles.button_dark}
             // add subject and body https://stackoverflow.com/questions/44594818/how-to-launch-and-open-email-client-react-native
-            onPress={() => Linking.openURL('mailto:support@example.com')}
+            onPress={() =>
+              Linking.openURL(
+                'mailto:support@example.com?subject=Fraudulent Purchase Claim&body=On {purchase_date}, a fraudulent purchase of amount {amount} dollars was made to the {organization} at {location}.'
+              )
+            }
             title="support@example.com">
             <Text
               style={{
@@ -1107,74 +1233,6 @@ function FileClaimScreen({ route, navigation }) {
             </Text>
           </Pressable>
         </View>
-      </View>
-      <View style={{ backgroundColor: colors.dark, flex: 0.15 }} />
-    </SafeAreaView>
-  );
-}
-
-{
-  /* Bank Details Screen:
-    Contains cards with the bank details of each bank "added" by the user
-    Currently not possible to add or remove banks
- */
-}
-function BankDetailsScreen({ navigation }) {
-  const [fontsLoaded] = useFonts({
-    Barlow_Regular: require('./assets/barlow/Barlow-Regular.otf'),
-    Barlow_Medium: require('./assets/barlow/Barlow-Medium.otf'),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
-
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View
-        style={{
-          backgroundColor: colors.dark,
-          flex: 0.3,
-          padding: 3,
-          justifyContent: 'center',
-        }}>
-        <Ionicons
-          name="menu-outline"
-          size={50}
-          color="#ADB6C4"
-          onPress={() => navigation.navigate('Menu', 'Bank Details')}
-        />
-      </View>
-      <View
-        style={{
-          backgroundColor: colors.highlight_light,
-          flex: 3,
-          alignItems: 'center',
-          justifyContent: 'center',
-          paddingBottom: 10,
-        }}>
-        <Text style={styles.title}>Bank Details</Text>
-        <ScrollView style={styles.whiteAbsolute}>
-          <Banks></Banks>
-        </ScrollView>
-        <Pressable
-          style={styles.button_dark}
-          onPress={() => console.log('try and add a bank huhhhh')}>
-          <Text
-            style={{
-              fontFamily: 'Barlow_Regular',
-              fontSize: 24,
-              color: 'white',
-            }}>
-            Add Bank
-          </Text>
-        </Pressable>
       </View>
       <View style={{ backgroundColor: colors.dark, flex: 0.15 }} />
     </SafeAreaView>
@@ -1270,3 +1328,4 @@ export default function App() {
     </NavigationContainer>
   );
 }
+

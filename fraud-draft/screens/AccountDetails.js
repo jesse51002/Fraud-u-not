@@ -14,8 +14,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Card } from 'react-native-paper';
 
 // import style sheet and colors
-const styles = require('../config/style');
 import colors from '../config/colors';
+const styles = require('../config/style').default;
+
 
 {
   /* get screen dimensions */
@@ -27,7 +28,27 @@ const windowWidth = Dimensions.get('window').width;
     Incomplete placeholder page
  */
 }
-export default function ContactUs({ navigation }) {
+export default function AccountDetails({ navigation }) {
+  // allow details to be changed by user
+  const [isEditable, setIsEditable] = useState(false);
+  // account details
+  // for the information
+  const [name, setName] = useState('Kristine Thomas');
+  const [username, setUsername] = useState('krist123');
+  const [email, setEmail] = useState('kristine@gmail.com');
+  const [phone, setPhone] = useState('(832) 972-5130');
+  const [address, setAddress] = useState(
+    '221B Baker St. \nHouston, Texas 77013 \nUnited States of America'
+  );
+  const [password, setPassword] = useState('•••••••••');
+  const [flagAmount, setFlagAmount] = useState('2000');
+
+  const updateEdit = () => {
+    //Handler to enable of disable TextInput
+    //Make TextInput Enable/Disable
+    setIsEditable(!isEditable);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View
@@ -56,85 +77,136 @@ export default function ContactUs({ navigation }) {
         <ScrollView style={styles.whiteAbsolute}>
           <Card style={styles.cardbackground}>
             <Card.Content>
-              <Text
-                style={{
-                  fontFamily: 'Barlow_Medium',
-                  fontSize: 16,
-                  paddingTop: 3,
-                }}>
-                Full Name:
-              </Text>
-              <Text style={styles.cardtext}>Krizteen Tomas</Text>
+              <Text style={styles.accountHeader}>Full Name:</Text>
+              <TextInput
+                placeholder={name}
+                style={[
+                  styles.textInputCard,
+                  {
+                    backgroundColor: isEditable ? 'white' : colors.card_light,
+                  },
+                ]}
+                //To make TextInput enable/disable
+                editable={isEditable}
+                onChangeText={(name) => setName(name)}
+              />
             </Card.Content>
           </Card>
           <Card style={styles.cardbackground}>
             <Card.Content>
-              <Text
-                style={{
-                  fontFamily: 'Barlow_Medium',
-                  fontSize: 16,
-                  paddingTop: 3,
-                }}>
-                Email:
-              </Text>
-              <Text style={styles.cardtext}>kristine@gmail.com</Text>
+              <Text style={styles.accountHeader}>Username:</Text>
+              <TextInput
+                placeholder={username}
+                style={[
+                  styles.textInputCard,
+                  {
+                    backgroundColor: isEditable ? 'white' : colors.card_light,
+                  },
+                ]}
+                //To make TextInput enable/disable
+                editable={isEditable}
+                onChangeText={(username) => setUsername(username)}
+              />
             </Card.Content>
           </Card>
           <Card style={styles.cardbackground}>
             <Card.Content>
-              <Text
-                style={{
-                  fontFamily: 'Barlow_Medium',
-                  fontSize: 16,
-                  paddingTop: 3,
-                }}>
-                Phone Number:
-              </Text>
-              <Text style={styles.cardtext}>(832) 972-5130</Text>
+              <Text style={styles.accountHeader}>Email:</Text>
+              <TextInput
+                placeholder={email}
+                style={[
+                  styles.textInputCard,
+                  {
+                    backgroundColor: isEditable ? 'white' : colors.card_light,
+                  },
+                ]}
+                //To make TextInput enable/disable
+                editable={isEditable}
+                onChangeText={(email) => setEmail(email)}
+              />
             </Card.Content>
           </Card>
           <Card style={styles.cardbackground}>
             <Card.Content>
-              <Text
-                style={{
-                  fontFamily: 'Barlow_Medium',
-                  fontSize: 16,
-                  paddingTop: 3,
-                }}>
-                Address:
-              </Text>
-              <Text style={styles.cardtext}>
-                221B Baker St. <br />
-                Houston, Texas 77013
-                <br />
-                United States of America
-              </Text>
+              <Text style={styles.accountHeader}>Phone Number:</Text>
+              <TextInput
+                placeholder={phone}
+                style={[
+                  styles.textInputCard,
+                  {
+                    backgroundColor: isEditable ? 'white' : colors.card_light,
+                  },
+                ]}
+                //To make TextInput enable/disable
+                editable={isEditable}
+                onChangeText={(phone) => setPhone(phone)}
+              />
             </Card.Content>
           </Card>
           <Card style={styles.cardbackground}>
             <Card.Content>
-              <Text
-                style={{
-                  fontFamily: 'Barlow_Medium',
-                  fontSize: 16,
-                  paddingTop: 3,
-                }}>
-                Password:
-              </Text>
-              <Text style={styles.cardtext}>**********</Text>
+              <Text style={styles.accountHeader}>Address:</Text>
+              <TextInput
+                placeholder={address}
+                style={[
+                  styles.textInputCard,
+                  {
+                    backgroundColor: isEditable ? 'white' : colors.card_light,
+                    height: 64,
+                  },
+                ]}
+                //To make TextInput enable/disable
+                editable={isEditable}
+                onChangeText={(address) => setAddress(address)}
+                multiline={true}
+                numberOfLines={3}
+              />
+            </Card.Content>
+          </Card>
+          <Card style={styles.cardbackground}>
+            <Card.Content>
+              <Text style={styles.accountHeader}>Password:</Text>
+              <TextInput
+                placeholder={password}
+                style={[
+                  styles.textInputCard,
+                  {
+                    backgroundColor: isEditable ? 'white' : colors.card_light,
+                  },
+                ]}
+                //To make TextInput enable/disable
+                secureTextEntry={true}
+                editable={isEditable}
+                onChangeText={(password) => setPassword(password)}
+              />
+            </Card.Content>
+          </Card>
+          <Card style={styles.cardbackground}>
+            <Card.Content>
+              <Text style={styles.accountHeader}>Flag Amount:</Text>
+              <TextInput
+                placeholder={flagAmount}
+                style={[
+                  styles.textInputCard,
+                  {
+                    backgroundColor: isEditable ? 'white' : colors.card_light,
+                  },
+                ]}
+                //To make TextInput enable/disable
+                editable={isEditable}
+                onChangeText={(flagAmount) => setFlagAmount(flagAmount)}
+              />
             </Card.Content>
           </Card>
         </ScrollView>
-        <Pressable
-          style={styles.button_dark}
-          onPress={() => console.log("update things")}>
+        <Pressable style={styles.button_dark} onPress={updateEdit}>
           <Text
             style={{
               fontFamily: 'Barlow_Regular',
               fontSize: 21,
               color: 'white',
             }}>
-            Update
+            {!isEditable ? 'Edit' : 'Save'}
           </Text>
         </Pressable>
       </View>

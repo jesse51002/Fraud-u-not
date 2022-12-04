@@ -8,7 +8,7 @@ import colors from './colors';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-module.exports = StyleSheet.create({
+export default StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
@@ -36,6 +36,11 @@ module.exports = StyleSheet.create({
     paddingBottom: 10,
     fontSize: 21,
   },
+  accountHeader: {
+    fontFamily: 'Barlow_Medium',
+    fontSize: 16,
+    paddingVertical: 3,
+  },
   button_light: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -61,6 +66,21 @@ module.exports = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 15,
+    fontFamily: 'Barlow_Regular',
+    fontSize: 16,
+  },
+  textInputCard: {
+    height: 35,
+    borderColor: colors.card_light,
+    borderRadius: 10,
+    paddingTop: 2,
+    backgroundColor: 'white',
+    fontFamily: 'Barlow_Regular',
+    fontSize: 16,
+    width: windowWidth - 100,
+    padding: 4,
+    borderWidth: 1,
+    color: colors.dark,
   },
   whiteContainer: {
     width: windowWidth - 50,
@@ -83,8 +103,7 @@ module.exports = StyleSheet.create({
     borderRadius: 15,
     paddingVertical: 10,
     backgroundColor: 'white',
-    alignContent: 'center',
-    alignItems: 'center',
+
   },
   separator: {
     borderBottomColor: colors.light,
@@ -116,6 +135,22 @@ module.exports = StyleSheet.create({
     borderRadius: 15,
     boxShadow: colors.dark,
     backgroundColor: colors.card_light,
+    justifyContent: 'space-between',
+  },
+  modalView: {
+    margin: 10,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    //alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   underline: {
     alignItems: 'center',

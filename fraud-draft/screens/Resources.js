@@ -13,9 +13,10 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Card } from 'react-native-paper';
 import * as WebBrowser from 'expo-web-browser';
 
-// import style sheet and colors
-const styles = require('../config/style');
 import colors from '../config/colors';
+// import style sheet and colors
+const styles = require('../config/style').default;
+
 
 {
   /* get screen dimensions */

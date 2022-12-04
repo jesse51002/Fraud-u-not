@@ -14,8 +14,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Card } from 'react-native-paper';
 
 // import style sheet and colors
-const styles = require('../config/style');
 import colors from '../config/colors';
+const styles = require('../config/style');
+
 
 {
   /* get screen dimensions */

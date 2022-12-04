@@ -13,8 +13,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Card } from 'react-native-paper';
 
 // import style sheet and colors
-const styles = require('../config/style');
 import colors from '../config/colors';
+const styles = require('../config/style').default;
+
 
 {
   /* get screen dimensions */
@@ -27,6 +28,8 @@ const windowWidth = Dimensions.get('window').width;
  */
 }
 export default function ContactUs({ navigation }) {
+  //return (<View><Text>yolomy ngiagasda d</Text></View>)
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View
@@ -52,7 +55,7 @@ export default function ContactUs({ navigation }) {
           paddingBottom: 10,
         }}>
         <Text style={styles.title}>Contact Us</Text>
-        <ScrollView style={styles.whiteAbsolute}>
+        {/*<ScrollView style={styles.whiteAbsolute}>*/}
           <Card
             style={{
               width: windowWidth - 70,
@@ -105,7 +108,7 @@ export default function ContactUs({ navigation }) {
               <Text style={styles.cardtext}>800 W Campbell Road, Richardson, Texas</Text>
             </Card.Content>
           </Card>
-        </ScrollView>
+        {/*</ScrollView>*/}
       </View>
       <View style={{ backgroundColor: colors.dark, flex: 0.15 }} />
     </SafeAreaView>
