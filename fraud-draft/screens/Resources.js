@@ -130,13 +130,21 @@ export default function Resources() {
   */
   }
   const handleClick = async () => {
+
+
+    let flagged = await getFlagged()
+
+    if(flagged == null){
+      return
+    }
+
     // updating purchases array - the flatlist automatically rerenders with the new purchase at the top
     setPurchases([
       {
         organization: organization,
         amount: amount,
         purchase_date: date,
-        flagged: await getFlagged(),
+        flagged: flagged,
         suspicious: false,
       },
       ...purchases,
@@ -173,14 +181,19 @@ export default function Resources() {
       });
 
       // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
-
-      const json = await response.json();
-      // if value is 0, then purchase not been flagged
-      //console.log(json.FraudPrediction);
-      if (json.FraudPrediction == 0) return false;
-      return true;
+      if (response.status === 200){
+        const json = await response.json();
+        // if value is 0, then purchase not been flagged
+        //console.log(json.FraudPrediction);
+        if (json.FraudPrediction == 0) return false;
+        return true;
+      }
+      else{
+        return null
+      }
     } catch (error) {
       console.error(error);
+      return null
     }
   };
 

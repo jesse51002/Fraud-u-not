@@ -1,6 +1,9 @@
 CREATE DATABASE IF NOT EXISTS fraudunotproject;
 USE fraudunotproject;
+
 /*create tables for customers purchase history*/
+
+/*
 create table IF NOT EXISTS sujaysspurchasesshistory(
 purchasedate TEXT,
 purchaseamount TEXT,
@@ -21,6 +24,8 @@ create table IF NOT EXISTS kristinesspurchasesshistory(
 purchasedate TEXT,
 purchaseamount TEXT,
 purchaseorg TEXT);
+*/
+
 create table IF NOT EXISTS accountssscustomerss(
 firstname TEXT,
 lastname TEXT,
@@ -40,7 +45,7 @@ associatedcard TEXT,
 accountnum TEXT,
 routingnum INTEGER,
 notificationmethod TEXT,
-authorizationmethod TEXT
+authorizationmethod TEXT,
 );
 /*creating and initliazing a table with all of the attributes and the data types*/
 INSERT INTO accountssscustomerss(firstname, lastname, username, password3, email,phone, City, State, Country,streetadress,zipcode, bank, banksemail,banksphonenumber, associatedcard, accountnum, routingnum,notificationmethod,authorizationmethod)
@@ -51,6 +56,8 @@ VALUES
  ('kristine', 'thomas', 'kristineflaming999','1334567789','kristinethomas@gmail.com',1334567789,'Chicken','Alaska','United States','33 kristineadressdrive','97687', 'JP MORGAN', 'jpmorganbank@gmail.com',4454454454, 'debt',9996669966,909909909,'fraud notifications only','email'),
  ('vranda', 'vijay', 'vrandaisinuganda','Cleveland','vrandavijay@gmail.com', 5465367678, 'Truth or Consequences', 'New Mexico', 'United States','78 Santafe drive','33334', 'Chase', 'chasebank@gmail.com',1191191119, 'credit',6669996699,099099099,'fraud notifications only','email')
  ;
+
+ /*
 INSERT INTO sujaysspurchasesshistory(purchasedate,purchaseamount,purchaseorg)
 VALUES
  ('August 30, 2022','879$','Amazon'),
@@ -67,5 +74,5 @@ VALUES
 INSERT INTO kristinesspurchasesshistory(purchasedate,purchaseamount,purchaseorg)
 VALUES 
  ('January 5,2022','89$','Amazon');
-
+*/
  /* inserting correspondiing values for all attributes for customers/*

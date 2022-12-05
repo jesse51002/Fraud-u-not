@@ -2,39 +2,46 @@
 import mysql.connector
 #first connect to database
 
+"""
 db = mysql.connector.connect(
     host="localhost",
     user="root",
     #insertpassword
-    passwd="",
+    passwd="password",
     database="fraudunotproject"
 )
 mycursor = db.cursor(buffered=True)
+"""
 #run mysql once
+mycursor = None
+
+def init(cursor):
+    global mycursor
+    mycursor = cursor
 
 #gets persons details
 
-def getdetailssqlfunction(personfname):
-    sql = "SELECT * FROM accountssscustomerss WHERE firstname = '" + personfname + "'";
+def getdetailssqlfunction(username):
+    sql = "SELECT * FROM accountssscustomerss WHERE username = '" + username + "'";
     print(sql)
     mycursor.execute(sql)
 
-#if u wanna get specific data from a person just replace * with the variable name
+    return mycursor.fetchall()[0]
 
-#TEST
-
-getdetailssqlfunction('sujay')
 
 #inserts persons details
 
 def insertpersonfunction(firstname, lastname, username, password3, email,phone, City, State, Country,streetadress,zipcode, bank, banksemail,banksphonenumber, associatedcard, accountnum, routingnum):
     sql = "Insert INTO accountssscutomerss (firstname, lastname, username, password3, email,phone, City, State, Country,streetadress,zipcode, bank, banksemail,banksphonenumber, associatedcard, accountnum, routingnum) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     val = (firstname,lastname,username,password3,email,phone,City,State,Country,streetadress,zipcode,bank,banksemail,banksphonenumber,associatedcard,accountnum,routingnum)
-    print(sql)
+    #print(sql)
     mycursor.execute(sql,val)
+
+    """
     sql = "CREATE TABLE IF NOT EXISTS " + firstname + "spurchasesshistory(purchasedate TEXT,purchaseamount TEXT, purchaseorg TEXT);"
     print(sql)
     mycursor.execute(sql)
+    """
 
 
 #TEST
@@ -45,28 +52,27 @@ def insertpersonfunction(firstname, lastname, username, password3, email,phone, 
 
 #deletes a person from database
 
-
-def deleteperson(fname):
-    sql = "DELETE FROM accountssscustomerss WHERE firstname = " + "'" +fname +"'"
+def deleteperson(username):
+    sql = "DELETE FROM accountssscustomerss WHERE username = " + "'" +username +"'"
     mycursor.execute(sql)
-    sql = "DROP TABLE " + fname + "spurchasesshistory"
-    mycursor.execute(sql)
-
-#TEST
-
-#deleteperson('darth')
-#getdetailssqlfunction('darth')
-
-def updatepersnsdetails(varname,varvalue,fname):
-    sql = "UPDATE accountssscustomerss SET " + varname + " = "  + "'" + varvalue +"'" + " WHERE firstname = " + "'" + fname + "'"
-    print(sql)
+    sql = "DROP TABLE " + username + "spurchasesshistory"
     mycursor.execute(sql)
 
-#TEST
+
+def updatepersnsdetails(varname,varvalue,username):
+    sql = "UPDATE accountssscustomerss SET " + varname + " = "  + "'" + varvalue +"'" + " WHERE username = " + "'" + username + "'"
+    mycursor.execute(sql)
+
+def getpersnsdetails(varname,username):
+    sql = "SELECT " + varname + " FROM accountssscustomerss WHERE " + "username = '" + username + "'" 
+    mycursor.execute(sql)
+    return mycursor.fetchall()[0][0]
+
 
 #updatepersnsdetails('lastname','karanam','sujay')
 #getdetailssqlfunction('sujay')
 
+"""
 def getpaymentdetails(fname):
     sql = "SELECT * FROM " + fname + "spurchasesshistory;"
     mycursor.execute(sql)
@@ -76,11 +82,4 @@ def insertpaymentdetail(fname,purchasedate,purchaseamount,purchaseorg):
     val = (purchasedate,purchaseamount,purchaseorg)
     print(sql)
     mycursor.execute(sql,val)
-
-#TEST
-
-#insertpaymentdetail('darth','August 6, 4545','79$')
-#deleteperson('darth')
-#getpaymentdetails('darth')
-for x in mycursor:
-    print(x)
+"""

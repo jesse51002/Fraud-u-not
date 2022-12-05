@@ -31,10 +31,14 @@ const windowWidth = Dimensions.get('window').width;
 export default function AccountDetails({ navigation }) {
   // allow details to be changed by user
   const [isEditable, setIsEditable] = useState(false);
-  // account details
-  // for the information
+  // (I think) every time the screen re-renders this function is called - perfect because it will keep getting updated by the database hopefully
+  
+  /**/
+  // JESSE get this from the cache
+  const [username, setUsername] = useState('rohanisbad');
+  // JESSE you need to leave the variables, but you can take out the text in it
+  // e.g., const [name, setName] = useState(''); instead
   const [name, setName] = useState('Kristine Thomas');
-  const [username, setUsername] = useState('krist123');
   const [email, setEmail] = useState('kristine@gmail.com');
   const [phone, setPhone] = useState('(832) 972-5130');
   const [address, setAddress] = useState(
@@ -42,12 +46,117 @@ export default function AccountDetails({ navigation }) {
   );
   const [password, setPassword] = useState('•••••••••');
   const [flagAmount, setFlagAmount] = useState('2000');
+  const [pulled, setPulled] = useState(false);
+  
 
-  const updateEdit = () => {
-    //Handler to enable of disable TextInput
-    //Make TextInput Enable/Disable
+  //// JESSE THIS PART IS RELEVANT TO YOU /////
+  {
+    /* PULLING FROM DATABASE
+    sending the database a username and getting the results back
+  */
+  }
+  const pullDetails = async () => {
+    try {
+      // ~~~ you just need to edit this part based on how your server works ~~~ //
+
+      const response = await fetch('http://127.0.0.1:5000/accountDetails', {
+        method: 'POST',
+        // main thing you probably have to modify
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          // JESSE you're gonna need to get this from the cache cuz right now its coming from my hardcoded value
+          type:"GET",
+          username: username,
+        })
+      });
+
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+      if (response.status === 200){
+        const json = await response.json();
+        // updating all the stored values
+        setName(json.name);
+        setEmail(json.email);
+        setPhone(json.phone);
+        setAddress(json.address);
+        // censoring the password
+        const pass = json.password3;
+        var replaced = pass.replace(/./g, '•');
+        setPassword(replaced);
+        //
+        //setFlagAmount(json.FlagAmount);
+        // check if the actual value is modified
+        console.log({ name });
+      }
+      else{
+        print('pullDetails failed')
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleClick = () => {
+    // Handler to enable of disable TextInput + update data in the database
+    // JESSE add this too
+    if (isEditable) {
+      updateDetails();
+      console.log("update database");
+
+      console.log('screen reloaded.');
+      pullDetails();
+    }
     setIsEditable(!isEditable);
   };
+
+  if(!pulled){
+    console.log('screen reloaded.');
+    pullDetails();
+    setPulled(true)
+  }
+
+  //// JESSE THIS PART IS RELEVANT TO YOU /////
+  {
+    /* SENDING UPDATES TO DATABASE
+    sending the database the updated account info whenever user clicks save
+  */
+  }
+  const updateDetails = async () => {
+    try {
+      // ~~~ you just need to edit this part based on how your server works ~~~ //
+
+      const response = await fetch('http://127.0.0.1:5000/accountDetails', {
+        method: 'POST',
+        // main thing you probably have to modify
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type:"SET",
+          username: username,
+          name: name,
+          email: email,
+          phone: phone,
+          address: address,
+          password3: password
+        }),
+      });
+
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+      if (response.status === 200){
+        const json = await response.json();
+        // I guess you could send me a value abt whether it worked or not
+        const didWork = json.Success;
+        console.log({ didWork });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -199,7 +308,7 @@ export default function AccountDetails({ navigation }) {
             </Card.Content>
           </Card>
         </ScrollView>
-        <Pressable style={styles.button_dark} onPress={updateEdit}>
+        <Pressable style={styles.button_dark} onPress={handleClick}>
           <Text
             style={{
               fontFamily: 'Barlow_Regular',
