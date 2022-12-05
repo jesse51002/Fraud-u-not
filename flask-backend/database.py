@@ -1,7 +1,7 @@
 #first install packae mysql-connector-python
 import mysql.connector
 #first connect to database
-
+import time
 """
 db = mysql.connector.connect(
     host="localhost",
@@ -14,15 +14,21 @@ mycursor = db.cursor(buffered=True)
 """
 #run mysql once
 mycursor = None
-
-def init(cursor):
+connection = None
+def init(con):
+    
     global mycursor
-    mycursor = cursor
+    global connection
+    connection = con
+    mycursor = connection.cursor()
+
+    updatepersnsdetails('phone', '99999999', 'rohanisbad')
+  
 
 #gets persons details
 
 def getdetailssqlfunction(username):
-    sql = "SELECT * FROM accountssscustomerss WHERE username = '" + username + "'";
+    sql = "SELECT * FROM accountsssscustomerss WHERE username = '" + username + "'";
     print(sql)
     mycursor.execute(sql)
 
@@ -53,24 +59,45 @@ def insertpersonfunction(firstname, lastname, username, password3, email,phone, 
 #deletes a person from database
 
 def deleteperson(username):
-    sql = "DELETE FROM accountssscustomerss WHERE username = " + "'" +username +"'"
+    sql = "DELETE FROM accountsssscustomerss WHERE username = " + "'" +username +"'"
     mycursor.execute(sql)
     sql = "DROP TABLE " + username + "spurchasesshistory"
     mycursor.execute(sql)
 
 
 def updatepersnsdetails(varname,varvalue,username):
-    sql = "UPDATE accountssscustomerss SET " + varname + " = "  + "'" + varvalue +"'" + " WHERE username = " + "'" + username + "'"
+    mycursor.execute("SET SQL_SAFE_UPDATES = 0")
+    sql = "UPDATE accountsssscustomerss SET " + varname + " = "  + "'" + varvalue +"'" + " WHERE username = " + "'" + username + "'"
     mycursor.execute(sql)
 
+
+
+def updatemultpersnsdetails(vars,username):
+    # mycursor.execute("SET SQL_SAFE_UPDATES = 0")
+    varsString = ""
+
+    for varname, varvalue in vars.items():
+        varsString += varname + " = "  + "'" + varvalue +"', "
+    
+    varsString = varsString[0:-2]
+
+    sql = "UPDATE accountsssscustomerss SET " + varsString + " WHERE username = " + "'" + username + "'"
+    mycursor.execute(sql)
+
+    time.sleep(5)
+
+    
+
+    return True
+
 def getpersnsdetails(varname,username):
-    sql = "SELECT " + varname + " FROM accountssscustomerss WHERE " + "username = '" + username + "'" 
+    sql = "SELECT " + varname + " FROM accountsssscustomerss WHERE " + "username = '" + username + "'" 
     mycursor.execute(sql)
     return mycursor.fetchall()[0][0]
 
 
 #updatepersnsdetails('lastname','karanam','sujay')
-#getdetailssqlfunction('sujay')
+#getdetailssqlfunction('rohanisbad')
 
 """
 def getpaymentdetails(fname):
@@ -83,3 +110,7 @@ def insertpaymentdetail(fname,purchasedate,purchaseamount,purchaseorg):
     print(sql)
     mycursor.execute(sql,val)
 """
+
+def closeCur():
+    connection.commit()
+    mycursor.close()

@@ -73,13 +73,13 @@ def bankDetails_page():
 
 @app.route('/accountDetails', methods=['POST'])
 def accountDetails_page():
-    init(mysql.connection.cursor())
+    init(mysql.connection)
     reqData = request.get_json()    
     reqType = reqData['type']
     reqData.pop('type', None)
 
     if reqType == "SET":
-        print("in account post")
+        print(reqData)
         username = reqData['username']
 
         reqData['firstname'] = reqData['name'].split()[0]
@@ -92,13 +92,14 @@ def accountDetails_page():
         reqData['State'] = ''
         reqData['Country'] = ''
         reqData['zipcode'] = ''
-
-        for key, value in reqData.items():
-            updatepersnsdetails(key, value, username)
-    
+        print(reqData)
+        
+        updatemultpersnsdetails(reqData, username)
+        # for key, value in reqData.items():
+            
+        closeCur()
         return {"Success":True}
     elif reqType == "GET":
-        print("in account get")
         username = reqData['username']
 
         neededVals = ['firstname', 'lastname', 'username', 'password3', 'email','phone', 'City', 'State', 'Country','streetadress','zipcode']
@@ -120,8 +121,8 @@ def accountDetails_page():
         response.pop('Country', None)
         response.pop('zipcode', None)
 
-        print(response)
-
+        # print(response)
+        closeCur()
         return response
     
     return None
@@ -133,6 +134,7 @@ def getAveragePurchase(username):
 # Runs the app
 if __name__ == '__main__':
     app.run(debug=True)
+    
     
     #from waitress import serve
     #serve(app, host="127.0.0.1", port=5000)

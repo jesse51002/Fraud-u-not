@@ -89,10 +89,7 @@ export default StyleSheet.create({
     marginBottom: 15,
     borderRadius: 15,
     padding: 10,
-    backgroundColor: 'white',
-    justifyContent: 'space-between',
-    alignContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'white'
   },
   whiteAbsolute: {
     width: windowWidth - 50,

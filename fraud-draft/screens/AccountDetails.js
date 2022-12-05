@@ -98,11 +98,11 @@ export default function AccountDetails({ navigation }) {
     }
   };
 
-  const handleClick = () => {
+  const handleClick = async () => {
     // Handler to enable of disable TextInput + update data in the database
     // JESSE add this too
     if (isEditable) {
-      updateDetails();
+      await updateDetails();
       console.log("update database");
 
       console.log('screen reloaded.');
