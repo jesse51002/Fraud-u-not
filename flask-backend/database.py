@@ -2,16 +2,9 @@
 import mysql.connector
 #first connect to database
 import time
-"""
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    #insertpassword
-    passwd="password",
-    database="fraudunotproject"
-)
-mycursor = db.cursor(buffered=True)
-"""
+import random
+import json
+
 #run mysql once
 mycursor = None
 connection = None
@@ -114,3 +107,61 @@ def insertpaymentdetail(fname,purchasedate,purchaseamount,purchaseorg):
 def closeCur():
     connection.commit()
     mycursor.close()
+
+
+if __name__ == "__main__":
+    db = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        #insertpassword
+        passwd="password",
+        database="fraudunotproject"
+    )
+    mycursor = db.cursor(buffered=True)
+
+    sql = """
+     SELECT firstname, lastname 
+     FROM accountsssscustomerss
+     """
+    mycursor.execute(sql)
+    names = mycursor.fetchall()
+    print(names)
+    for x in names:
+        banks = ['Wells Fargo', 'Capital One', 'Citi', 'Bank Of America', 'Chase']
+
+        data = {
+            'banks': [
+                {
+                'bankname': banks[random.randint(0,len(banks) - 1)],
+                'cardholder': x[0] + ' ' + x[1],
+                'cardnumber': str(random.randint(
+                    1000000000000000,
+                    9999999999999999
+                    )),
+                'expdate': '09/2089',
+                'cvv': random.randint(100,999),
+                'cardtype': 'Debit',
+                },
+                {
+                'bankname': 'Capital One',
+                'cardholder': x[0] + ' ' + x[1],
+                'cardnumber': str(random.randint(
+                    1000000000000000,
+                    9999999999999999
+                    )),                'expdate': '12/2043',
+                'cvv': random.randint(100,999),
+                'cardtype': 'Credit',
+                }
+            ]
+        }
+
+        jsonData = json.dumps(data)
+        updateSql = """
+        UPDATE  accountsssscustomerss
+        SET bank=%s
+        WHERE firstname=%s
+        """
+        mycursor.execute(updateSql,(jsonData, x[0]))
+    db.commit()
+
+        

@@ -25,13 +25,24 @@ const styles = require('../config/style').default;
 }
 const windowWidth = Dimensions.get('window').width;
 
+
+
+
 /* Bank Cards:
     Stores an array with details on each bank, then renders each one as a card in a FlatList
     Specifically tracks bankname, email, phone, and cardtype of each bank/card
 */
 export default function BankDetails({ navigation }) {
+/* JESSE NEW SECTION */
+  // (I think) every time the screen re-renders this function is called - perfect because it will keep getting updated by the database hopefully
+  React.useEffect(() => {
+    console.log('screen reloaded.');
+    pullDetails();
+  }, []);
+  /**/
+
   // this holds the array of all the article objects/items
-  const initialState = [
+  const [initialState, setInitialState] = useState([
     {
       bankname: 'Wells Fargo',
       cardholder: 'Kristine Thomas',
@@ -48,7 +59,10 @@ export default function BankDetails({ navigation }) {
       cvv: 123,
       cardtype: 'Credit',
     },
-  ];
+  ]);
+
+  // JESSE get this value from the cache
+  const username = 'rohanisbad';
 
   // used to update the array
   const [purchases, setPurchases] = useState(initialState);
@@ -70,20 +84,109 @@ export default function BankDetails({ navigation }) {
     is called when modal window is closed (after necessary info is inputted by user)
   */
   }
-  const handleClick = () => {
+
+  React.useEffect( () => {
+    updateDetails();
+    
+  }, [purchases])
+
+  const handleClick = async () => {
     /* censor all digits except the last 4 - thank you https://stackoverflow.com/questions/66008805/how-to-convert-number-in-start-except-last-4-digits-in-react-native */
-    var replaced = cardnumber.replace(/.(?=.{4,}$)/g, '•');
+    const replaced = cardnumber.replace(/.(?=.{4,}$)/g, '•');
     // updating purchases array - the flatlist automatically rerenders with the new purchase at the top
-    setPurchases((current) => [
+    setPurchases([
       {
         bankname: bankname,
         cardholder: cardholder,
         cardnumber: replaced,
         cardtype: cardtype,
+        cvv: cvv,
+        expdata: expdate
       },
-      ...current,
+      ...purchases
     ]);
+    //console.log(purchases)
+    // JESSE add this to this function
+    
   };
+
+  //// JESSE THIS PART IS RELEVANT TO YOU /////
+  {
+    /* PULLING FROM DATABASE
+    sending the database a username and getting the results back
+  */
+  }
+  const pullDetails = async () => {
+    try {
+      // ~~~ you just need to edit this part based on how your server works ~~~ //
+
+      const response = await fetch('http://127.0.0.1:5000/bankDetails', {
+        method: 'POST',
+        // main thing you probably have to modify
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          // JESSE you're gonna need to get this from the cache cuz right now its coming from my hardcoded value
+          type:'GET',
+          username: username,
+
+        }),
+      });
+
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+      if (response.status === 200){
+        const json = await response.json();
+        console.log(json.banks)
+        // you need to send me an array (similar to what the initialState is currently)
+        
+        setPurchases(json.banks);
+      }
+      else{
+        print('FAILED TO PULL IBANKS')
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //// JESSE THIS PART IS RELEVANT TO YOU /////
+  {
+    /* SENDING UPDATES TO DATABASE
+    sending the database the updated account info whenever user clicks save
+  */
+  }
+  const updateDetails = async () => {
+    try {
+      // ~~~ you just need to edit this part based on how your server works ~~~ //
+
+      const response = await fetch('http://127.0.0.1:5000/bankDetails', {
+        method: 'POST',
+        // main thing you probably have to modify
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type:'SET',
+          username: username,
+          banks: purchases
+        }),
+      });
+
+      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+
+      const json = await response.json();
+      // I guess you could send me a value abt whether it worked or not
+      const didWork = json.Success;
+      console.log({ didWork });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

@@ -3,9 +3,11 @@
 from flask import Flask, request
 from flask_cors import CORS
 from flask_mysqldb import MySQL
+import json
 
 from exportedModel import modelPrediction
 from database import *
+import re
 
 app = Flask(__name__)
 CORS(app)
@@ -37,34 +39,33 @@ def fraudPred():
         usedPin=reqData['UsedPin'], 
         onlineOrder=reqData['OnlineOrder']
     )
-    print("hi11")
     response = {"FraudPrediction": predClass.predictFraud()}
     print(response)
-    print("hi33")
     # Sends the prediction back to the front end
     return response
 
 @app.route('/bankDetails', methods=['POST', 'GET'])
 def bankDetails_page():
-    init(mysql.connection.cursor())
-
+    init(mysql.connection)
     reqData = request.get_json()    
+    reqType = reqData['type']
+    reqData.pop('type', None)   
 
-    if request.method == "POST":
+    if reqType == "SET":
         username = reqData['username']
-        for key, value in reqData.items():
-            updatepersnsdetails(key, value, username)
-    
-        return True
-    elif request.method == "GET":
+        banks = json.dumps({'banks': reqData['banks']})
+        print(reqData['banks'])
+        updatemultpersnsdetails({'bank': banks}, username)
+        closeCur()
+        return {'Success':True}
+    elif reqType == "GET":
         username = reqData['username']
-
-        neededVals = ["bank", "banksemail", "banksphonenumber" , "associatedcard" , "accountnum" , "routingnum"]
 
         response = {}
-
-        for val in neededVals:
-            response[val] = getpersnsdetails(val, username)
+        response= json.loads(getpersnsdetails('bank', username))
+        #print(response)
+        # print(response)
+        closeCur()
 
         return response
     
@@ -113,7 +114,13 @@ def accountDetails_page():
         response.pop('firstname', None)
         response.pop('lastname', None)
         
-        response['address'] = response['streetadress'] + ", " + response['City'] + ", " + response['State']+ ", " + response['Country']+ ", " + response['zipcode']
+        addressCombineVals = ['streetadress', 'City', 'State', 'Country','zipcode']
+        response['address'] = ""
+        for x in addressCombineVals:
+            if len(response[x]) > 0:
+                response['address'] += response[x] + ", "
+        
+        response['address'] =  response['address'][0:-2]
 
         response.pop('streetadress', None)
         response.pop('City', None)
