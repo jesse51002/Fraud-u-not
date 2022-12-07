@@ -27,7 +27,8 @@
     "react-native-modal": "^13.0.1",
     "react-native-paper": "^4.12.5",
     "react-native-screens": "~3.18.0",
-    "react-native-web": "~0.18.9"
+    "react-native-web": "~0.18.9",
+    "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

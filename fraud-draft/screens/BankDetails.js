@@ -14,7 +14,7 @@ import {
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Card } from 'react-native-paper';
 import Modal from 'react-native-modal';
-
+import Cookies from 'universal-cookie';
 // import style sheet and color palette
 import colors from '../config/colors';
 const styles = require('../config/style').default;
@@ -33,13 +33,8 @@ const windowWidth = Dimensions.get('window').width;
     Specifically tracks bankname, email, phone, and cardtype of each bank/card
 */
 export default function BankDetails({ navigation }) {
-/* JESSE NEW SECTION */
-  // (I think) every time the screen re-renders this function is called - perfect because it will keep getting updated by the database hopefully
-  React.useEffect(() => {
-    console.log('screen reloaded.');
-    pullDetails();
-  }, []);
-  /**/
+
+  
 
   // this holds the array of all the article objects/items
   const [initialState, setInitialState] = useState([
@@ -62,7 +57,7 @@ export default function BankDetails({ navigation }) {
   ]);
 
   // JESSE get this value from the cache
-  const username = 'rohanisbad';
+  const [username, setUsername] = useState('');
 
   // used to update the array
   const [purchases, setPurchases] = useState(initialState);
@@ -85,9 +80,23 @@ export default function BankDetails({ navigation }) {
   */
   }
 
+/* JESSE NEW SECTION */
+  // (I think) every time the screen re-renders this function is called - perfect because it will keep getting updated by the database hopefully
+  React.useEffect(() => {
+    console.log('screen reloaded.');
+
+    const cookies = new Cookies();
+    setUsername(cookies.get('username'))
+
+  }, []);
+  /**/
+
+  React.useEffect(() => {
+    pullDetails();
+  }, [username]);
+
   React.useEffect( () => {
     updateDetails();
-    
   }, [purchases])
 
   const handleClick = async () => {

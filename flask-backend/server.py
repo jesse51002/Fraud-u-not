@@ -19,12 +19,21 @@ app.config['MYSQL_DB'] ="fraudunotproject"
 
 mysql = MySQL(app)
 
+@app.route('/login', methods=['POST', 'GET'])
+def login_page():
+    init(mysql.connection)
+
+    reqData = request.get_json()
+
+    return {"Success": accountExist(reqData['username'], reqData['password'])}
+    
 
 
+    
 # Member API rooute
 
-@app.route('/fraudPred_page', methods=['POST', 'GET'])
-def fraudPred():
+@app.route('/fraudPred', methods=['POST', 'GET'])
+def fraudPred_page():
     # Gets the request data
     reqData = request.get_json()
     print(reqData)

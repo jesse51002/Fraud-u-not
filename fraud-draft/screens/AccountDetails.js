@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Card } from 'react-native-paper';
-
+import Cookies from 'universal-cookie';
 // import style sheet and colors
 import colors from '../config/colors';
 const styles = require('../config/style').default;
@@ -48,6 +48,19 @@ export default function AccountDetails({ navigation }) {
   const [flagAmount, setFlagAmount] = useState('2000');
   const [pulled, setPulled] = useState(false);
   
+
+  React.useEffect(() => {
+    console.log('screen reloaded.');
+
+    const cookies = new Cookies();
+    setUsername(cookies.get('username'))
+
+  }, []);
+  /**/
+
+  React.useEffect(() => {
+    pullDetails()
+  }, [username]);
 
   //// JESSE THIS PART IS RELEVANT TO YOU /////
   {
@@ -87,8 +100,6 @@ export default function AccountDetails({ navigation }) {
         setPassword(replaced);
         //
         //setFlagAmount(json.FlagAmount);
-        // check if the actual value is modified
-        console.log({ name });
       }
       else{
         print('pullDetails failed')

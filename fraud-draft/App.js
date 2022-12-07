@@ -31,6 +31,8 @@ import ContactUsScreen from './screens/ContactUs';
 import AboutAppScreen from './screens/AboutApp';
 import ResourcesScreen from './screens/Resources';
 
+import Cookies from 'universal-cookie';
+
 import colors from './config/colors';
 // import style sheet and color palette
 const styles = require('./config/style').default;
@@ -184,6 +186,14 @@ function LoginScreen({ navigation }) {
   // for the pop-up window
   const [isModalVisible, setModalVisible] = useState(false);
 
+
+  React.useEffect(() => {
+    const cookies = new Cookies();
+    if (cookies.get('username').length > 0){
+      navigation.navigate('Menu', 'Purchase History');
+    }
+  })
+
   ///// JESSE THIS PART IS RELEVANT TO YOU /////
   {
     /* FETCHING FROM ML MODEL
@@ -193,7 +203,7 @@ function LoginScreen({ navigation }) {
   const getLoginSuccess = async () => {
     try {
       // ~~~ you just need to edit this part based on how your server works ~~~ //
-      const response = await fetch('http://127.0.0.1:5000/fraudPred', {
+      const response = await fetch('http://127.0.0.1:5000/login', {
         method: 'POST',
         // main thing you probably have to modify
         headers: {
@@ -201,19 +211,27 @@ function LoginScreen({ navigation }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          Username: username,
-          Password: password,
+          username: username,
+          password: password,
         }),
       });
       // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ //
+      
+      if (response.status == 200){
+        const json = await response.json();
+        // if value is 0, then purchase not been flagged
+        // console.log(json.Success);
+        if (json.Success == 0) return false;
 
-      const json = await response.json();
-      // if value is 0, then purchase not been flagged
-      console.log(json.LoginSuccess);
-      if (json.LoginSuccess == 0) return false;
-      return true;
+        const cookies = new Cookies();
+        cookies.set('username', username, { path: '/' });
+        console.log(cookies.get('username')); // Pacman
+
+        return true;
+      }
     } catch (error) {
       console.error(error);
+      return false
     }
   };
 
@@ -224,8 +242,8 @@ function LoginScreen({ navigation }) {
     otherwise, 
    */
   }
-  const handleClick = () => {
-    if (getLoginSuccess()) {
+  const handleClick = async () => {
+    if (await getLoginSuccess()) {
       navigation.navigate('Menu', 'Purchase History');
     } else {
       setModalVisible(!isModalVisible);
@@ -591,7 +609,11 @@ function MenuScreen({ route, navigation }) {
         <View style={styles.separator} />
         <Pressable
           style={styles.underline}
-          onPress={() => navigation.navigate('Home')}>
+          onPress={() => {
+              navigation.navigate('Home')
+              const cookies = new Cookies();
+              cookies.set('username', '', { path: '/' });
+            }}>
           <Text
             style={{
               justifyContent: 'flex-end',

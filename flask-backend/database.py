@@ -14,9 +14,14 @@ def init(con):
     global connection
     connection = con
     mycursor = connection.cursor()
-
-    updatepersnsdetails('phone', '99999999', 'rohanisbad')
   
+
+def accountExist(username, password):
+    sql = "SELECT * FROM accountsssscustomerss WHERE username = '" + username + "' AND password3 = '" + password + "';";
+    print(sql) 
+    mycursor.execute(sql)
+
+    return len(mycursor.fetchall()) >= 1
 
 #gets persons details
 
